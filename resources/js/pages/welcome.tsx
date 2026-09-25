@@ -7,97 +7,22 @@ import FeaturedPost from '@/components/blog/featured-post';
 import PostCard from '@/components/blog/post-card';
 import type { BlogPost } from '@/types/blog';
 
-const CATEGORIES = [
-    'Vendor Management',
-    'Ticket Hacks',
-    'Venue Scouting',
-    'Galas',
-    'Insight',
-];
+interface WelcomeProps {
+    featuredPost: BlogPost | null;
+    posts: BlogPost[];
+    categories: string[];
+}
 
-const FEATURED_POST: BlogPost = {
-    id: 'featured',
-    title: 'Event Categories Nigerians Love The Most.',
-    excerpt:
-        'For the longest time, and even still recently, the greatest assumption about Nigerians is that we love a good reason to party. However, data from…',
-    image: '/assets/img/blog/post-featured.jpg',
-    date: '23 Sep 2026',
-    readTime: '1 min read',
-    category: 'Insight',
-    tag: 'New Blog',
-};
-
-const POSTS: BlogPost[] = [
-    {
-        id: 'post-1',
-        title: 'Event Categories Nigerians Love The Most.',
-        excerpt:
-            'For the longest time, and even still recently, the greatest assumption about Nigerians is that we love a good reason to party. However, data from…',
-        image: '/assets/img/blog/post-1.jpg',
-        date: '23 Sep 2026',
-        readTime: '1 min read',
-        category: 'Insight',
-        tag: 'Recent',
-    },
-    {
-        id: 'post-2',
-        title: 'The ticketing way for corporate gatherings',
-        excerpt:
-            'For the longest time, and even still recently, the greatest assumption about Nigerians is that we love a good reason to party. However, data from…',
-        image: '/assets/img/blog/post-2.jpg',
-        date: '23 Sep 2026',
-        readTime: '1 min read',
-        category: 'Ticket Hacks',
-        tag: 'Recent',
-    },
-    {
-        id: 'post-3',
-        title: 'How to organise and curate traditional events',
-        excerpt:
-            'For the longest time, and even still recently, the greatest assumption about Nigerians is that we love a good reason to party. However, data from…',
-        image: '/assets/img/blog/post-3.jpg',
-        date: '23 Sep 2026',
-        readTime: '1 min read',
-        category: 'Insight',
-    },
-    {
-        id: 'post-4',
-        title: 'Event Categories Nigerians Love The Most.',
-        excerpt:
-            'For the longest time, and even still recently, the greatest assumption about Nigerians is that we love a good reason to party. However, data from…',
-        image: '/assets/img/blog/post-1.jpg',
-        date: '23 Sep 2026',
-        readTime: '1 min read',
-        category: 'Insight',
-    },
-    {
-        id: 'post-5',
-        title: 'The ticketing way for corporate gatherings',
-        excerpt:
-            'For the longest time, and even still recently, the greatest assumption about Nigerians is that we love a good reason to party. However, data from…',
-        image: '/assets/img/blog/post-2.jpg',
-        date: '23 Sep 2026',
-        readTime: '1 min read',
-        category: 'Ticket Hacks',
-    },
-    {
-        id: 'post-6',
-        title: 'How to organise and curate traditional events',
-        excerpt:
-            'For the longest time, and even still recently, the greatest assumption about Nigerians is that we love a good reason to party. However, data from…',
-        image: '/assets/img/blog/post-3.jpg',
-        date: '23 Sep 2026',
-        readTime: '1 min read',
-        category: 'Insight',
-    },
-];
-
-export default function Welcome() {
+export default function Welcome({
+    featuredPost,
+    posts,
+    categories,
+}: WelcomeProps) {
     const [activeCategory, setActiveCategory] = useState('All');
     const [search, setSearch] = useState('');
 
     const visiblePosts = useMemo(() => {
-        return POSTS.filter((post) => {
+        return posts.filter((post) => {
             const matchesCategory =
                 activeCategory === 'All' || post.category === activeCategory;
             const matchesSearch = post.title
@@ -106,7 +31,7 @@ export default function Welcome() {
 
             return matchesCategory && matchesSearch;
         });
-    }, [activeCategory, search]);
+    }, [posts, activeCategory, search]);
 
     return (
         <>
@@ -152,7 +77,7 @@ export default function Welcome() {
                         </p>
 
                         <CategoryFilter
-                            categories={CATEGORIES}
+                            categories={categories}
                             active={activeCategory}
                             onActiveChange={setActiveCategory}
                             search={search}
@@ -160,11 +85,17 @@ export default function Welcome() {
                         />
                     </section>
 
-                    <FeaturedPost post={FEATURED_POST} />
+                    {featuredPost && <FeaturedPost post={featuredPost} />}
 
                     <div className="border-t border-brand-stroke" />
 
-                    {visiblePosts.length > 0 ? (
+                    {posts.length === 0 ? (
+                        <p className="py-8 text-center font-brand text-base text-brand-muted">
+                            {featuredPost
+                                ? 'More headlines are on the way — check back soon.'
+                                : 'No headlines published yet — check back soon.'}
+                        </p>
+                    ) : visiblePosts.length > 0 ? (
                         <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
                             {visiblePosts.map((post) => (
                                 <PostCard key={post.id} post={post} />

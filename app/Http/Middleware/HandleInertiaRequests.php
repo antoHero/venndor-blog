@@ -29,19 +29,17 @@ class HandleInertiaRequests extends Middleware
     /**
      * Define the props that are shared by default.
      *
+     * The public blog is unauthenticated and doesn't render an app shell,
+     * so there's nothing beyond Inertia's own defaults to share right now.
+     *
      * @see https://inertiajs.com/shared-data
      *
      * @return array<string, mixed>
      */
     public function share(Request $request): array
     {
-        return [
-            ...parent::share($request),
-            'name' => config('app.name'),
-            'auth' => [
-                'user' => $request->user(),
-            ],
-            'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
-        ];
+        return array_merge(parent::share($request), [
+            'venndor_url' => config('app.venndor_url'),
+        ]);
     }
 }
