@@ -80,7 +80,7 @@ class PostForm
                                         ? 'The post goes live at this time.'
                                         : 'Leave blank to publish immediately.')
                                     ->required(fn (Get $get): bool => self::statusIs($get, PostStatus::Scheduled))
-                                    ->visible(fn (Get $get): bool => self::statusIs($get, PostStatus::Scheduled, PostStatus::Published)),,
+                                    ->visible(fn (Get $get): bool => self::statusIs($get, PostStatus::Scheduled, PostStatus::Published)),
                             Select::make('admin_user_id')
                                 ->label('Author')
                                 ->relationship('author', 'name')
