@@ -2,7 +2,7 @@ FROM serversideup/php:8.4-fpm-nginx
 
 USER root
 # Add any extensions your app needs
-RUN install-php-extensions intl bcmath
+RUN install-php-extensions intl bcmath exif gd
 
 # Node, only needed to build frontend assets
 RUN apt-get update \
