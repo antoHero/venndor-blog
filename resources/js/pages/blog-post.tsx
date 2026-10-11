@@ -57,6 +57,14 @@ export default function BlogPostPage({ post, related }: BlogPostPageProps) {
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-1">
                                     <div className="flex flex-col">
+                                        {post.author && (
+                                            <p className="flex-1 font-brand text-sm text-brand-subtle">
+                                                By{" "}
+                                                <span className="font-medium text-brand-ink">
+                                                    {post.author}
+                                                </span>
+                                            </p>
+                                        )}
                                         <p className="flex-1 font-brand text-sm text-brand-subtle">
                                             {[
                                                 post.readTime,
@@ -66,21 +74,14 @@ export default function BlogPostPage({ post, related }: BlogPostPageProps) {
                                                 .filter(Boolean)
                                                 .join(" • ")}
                                         </p>
-                                        {post.author && (
-                                            <p className="font-brand text-sm text-brand-subtle">
-                                                By{" "}
-                                                <span className="font-medium text-brand-ink">
-                                                    {post.author}
-                                                </span>
-                                            </p>
-                                        )}
+
                                     </div>
-                                    {post.tag && (
+                                    {/*{post.tag && (
                                         <span className="flex shrink-0 items-center gap-1 font-brand text-sm font-medium text-brand-success">
                                             <span className="size-2 rounded-full bg-brand-success" />
                                             {post.tag}
                                         </span>
-                                    )}
+                                    )}*/}
                                 </div>
 
                                 <div className="flex flex-col items-center gap-1">
