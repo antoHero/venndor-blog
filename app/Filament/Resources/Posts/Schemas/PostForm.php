@@ -73,18 +73,14 @@ class PostForm
                                 ->required()
                                 ->live()
                                 ->native(false),
-                            DateTimePicker::make('published_at')
-                                ->label('Publish at')
-                                ->native(false)
-                                ->default(now())
-                                ->required(fn (Get $get): bool => in_array($get('status'), [
-                                    PostStatus::Scheduled->value,
-                                    PostStatus::Published->value,
-                                ]))
-                                ->visible(fn (Get $get): bool => in_array($get('status'), [
-                                    PostStatus::Scheduled->value,
-                                    PostStatus::Published->value,
-                                ])),
+                                DateTimePicker::make('published_at')
+                                    ->label('Publish at')
+                                    ->native(false)
+                                    ->helperText(fn (Get $get): string => self::statusIs($get, PostStatus::Scheduled)
+                                        ? 'The post goes live at this time.'
+                                        : 'Leave blank to publish immediately.')
+                                    ->required(fn (Get $get): bool => self::statusIs($get, PostStatus::Scheduled))
+                                    ->visible(fn (Get $get): bool => self::statusIs($get, PostStatus::Scheduled, PostStatus::Published)),,
                             Select::make('admin_user_id')
                                 ->label('Author')
                                 ->relationship('author', 'name')
@@ -142,5 +138,13 @@ class PostForm
                         ]),
                 ])->columnSpan(1),
             ]);
+    }
+
+    private static function statusIs(Get $get, PostStatus ...$statuses): bool
+    {
+        $state = $get('status');
+        $status = $state instanceof PostStatus ? $state : PostStatus::tryFrom((string) $state);
+
+        return $status !== null && in_array($status, $statuses, true);
     }
 }

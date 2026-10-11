@@ -165,4 +165,17 @@ class Post extends Model implements HasMedia
     {
         return $this->getFirstMediaUrl('posts') ?: null;
     }
+
+    protected static function booted(): void
+    {
+        static::saving(function (Post $post): void {
+            $status = $post->status instanceof PostStatus
+                ? $post->status
+                : PostStatus::tryFrom((string) $post->status);
+
+            if ($status === PostStatus::Published && $post->published_at === null) {
+                $post->published_at = now();
+            }
+        });
+    }
 }
