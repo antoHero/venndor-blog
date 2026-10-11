@@ -177,5 +177,15 @@ class Post extends Model implements HasMedia
                 $post->published_at = now();
             }
         });
+
+        static::updating(function (Post $post): void {
+            $status = $post->status instanceof PostStatus
+                ? $post->status
+                : PostStatus::tryFrom((string) $post->status);
+
+            if ($status === PostStatus::Published && $post->published_at === null) {
+                $post->published_at = now();
+            }
+        });
     }
 }
