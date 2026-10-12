@@ -55,7 +55,7 @@ export default function BlogPostPage({ post, related }: BlogPostPageProps) {
 
                     <article className="mx-auto flex w-full max-w-3xl flex-col gap-8">
                         <header className="flex flex-col gap-4">
-                            <div className="flex items-start md:items-center md:justify-start flex-col md:flex-row justify-between gap-4 md:gap-0">
+                            <div className="flex items-start md:items-center justify-start flex-col md:flex-row md:justify-between gap-4 md:gap-0">
                                 <div className="flex items-center gap-1">
                                     <div className="flex flex-col">
                                         {post.author && (
