@@ -51,32 +51,8 @@ export default function BlogPostPage({ post, related }: BlogPostPageProps) {
                 {post.seoDescription && (
                     <meta name="description" content={post.seoDescription} />
                 )}
-                <meta property="og:type" content="article" />
-                <meta property="og:site_name" content="Venndor Blog" />
-                <meta property="og:title" content={post.seoTitle} />
-                {post.seoDescription && (
-                    <meta
-                        property="og:description"
-                        content={post.seoDescription}
-                    />
-                )}
-                {post.image && (
-                    <meta property="og:image" content={post.image} />
-                )}
-                <meta
-                    name="twitter:card"
-                    content={post.image ? "summary_large_image" : "summary"}
-                />
-                <meta name="twitter:title" content={post.seoTitle} />
-                {post.seoDescription && (
-                    <meta
-                        name="twitter:description"
-                        content={post.seoDescription}
-                    />
-                )}
-                {post.image && (
-                    <meta name="twitter:image" content={post.image} />
-                )}
+                {/* og:* and twitter:* tags are rendered server-side in app.blade.php
+                    (social crawlers don't run JavaScript). */}
             </Head>
 
             <div className="flex min-h-screen flex-col bg-white font-brand">
@@ -128,18 +104,26 @@ export default function BlogPostPage({ post, related }: BlogPostPageProps) {
                                 <div className="flex flex-col text-xs md:text-sm items-start md:items-center gap-1">
                                     <p>Share via</p>
                                     <div className="flex items-start md:items-center gap-1">
-                                        {SHARE_BUTTONS.map(({ id, label, Icon }) => (
-                                            <button
-                                                key={label}
-                                                type="button"
-                                                aria-label={`Share on ${label}`}
-                                                aria-haspopup={id ? undefined : "dialog"}
-                                                onClick={() => handleShareClick(id)}
-                                                className="cursor-pointer flex items-center justify-center p-1.5 rounded-md h-7 w-7 md:h-9 md:w-9 bg-[#F4F4F4] transition-colors hover:bg-brand-surface focus-visible:outline-2 focus-visible:outline-brand"
-                                            >
-                                                <Icon className="h-5.5 w-5.5 md:h-6.25 md:w-6.25" />
-                                            </button>
-                                        ))}
+                                        {SHARE_BUTTONS.map(
+                                            ({ id, label, Icon }) => (
+                                                <button
+                                                    key={label}
+                                                    type="button"
+                                                    aria-label={`Share on ${label}`}
+                                                    aria-haspopup={
+                                                        id
+                                                            ? undefined
+                                                            : "dialog"
+                                                    }
+                                                    onClick={() =>
+                                                        handleShareClick(id)
+                                                    }
+                                                    className="cursor-pointer flex items-center justify-center p-1.5 rounded-md h-7 w-7 md:h-9 md:w-9 bg-[#F4F4F4] transition-colors hover:bg-brand-surface focus-visible:outline-2 focus-visible:outline-brand"
+                                                >
+                                                    <Icon className="h-5.5 w-5.5 md:h-6.25 md:w-6.25" />
+                                                </button>
+                                            ),
+                                        )}
                                     </div>
                                     {notice && (
                                         <p

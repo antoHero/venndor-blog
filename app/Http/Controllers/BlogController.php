@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Post;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -57,15 +59,25 @@ class BlogController extends Controller
             ->limit(3)
             ->get();
 
+        $postData = [
+            ...$this->present($post),
+            'body' => $post->body,
+            'author' => $post->author?->name,
+            'tags' => $post->tags->pluck('name'),
+            'seoTitle' => $post->seo_title ?: $post->title,
+            'seoDescription' => $post->seo_description ?: $post->excerpt,
+        ];
+
+        // Rendered server-side in app.blade.php so WhatsApp/LinkedIn crawlers can read it
+        View::share('meta', [
+            'title' => $postData['seoTitle'],
+            'description' => Str::limit(trim(strip_tags((string) $postData['seoDescription'])), 160),
+            'image' => ! empty($postData['image']) ? url($postData['image']) : null,
+            'url' => url()->current(),
+        ]);
+
         return Inertia::render('blog-post', [
-            'post' => [
-                ...$this->present($post),
-                'body' => $post->body,
-                'author' => $post->author?->name,
-                'tags' => $post->tags->pluck('name'),
-                'seoTitle' => $post->seo_title ?: $post->title,
-                'seoDescription' => $post->seo_description ?: $post->excerpt,
-            ],
+            'post' => $postData,
             'related' => $related->map(fn (Post $related) => $this->present($related))->values(),
         ]);
     }
