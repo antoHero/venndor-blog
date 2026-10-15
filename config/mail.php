@@ -49,6 +49,12 @@ return [
             'local_domain' => env('MAIL_EHLO_DOMAIN', parse_url((string) env('APP_URL', 'http://localhost'), PHP_URL_HOST)),
         ],
 
+        'zeptomail' => [
+            'transport' => 'zeptomail',
+            'token' => env('ZEPTOMAIL_TOKEN'),
+            'endpoint' => env('ZEPTOMAIL_ENDPOINT', 'https://api.zeptomail.com/v1.1/email'),
+        ],
+
         'ses' => [
             'transport' => 'ses',
         ],

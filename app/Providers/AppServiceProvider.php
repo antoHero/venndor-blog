@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Mail\ZeptoMailTransport;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
@@ -25,6 +27,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+        $this->configureZeptoMail();
     }
 
     /**
@@ -51,5 +54,13 @@ class AppServiceProvider extends ServiceProvider
         if (app()->environment('production')) {
             URL::forceScheme('https');
         }
+    }
+
+    private function configureZeptoMail(): void
+    {
+        Mail::extend('zeptomail', fn (array $config) => new ZeptoMailTransport(
+            $config['token'],
+            $config['endpoint'],
+        ));
     }
 }
